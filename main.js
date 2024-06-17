@@ -11,6 +11,10 @@ scene = new THREE.Scene();
 
 renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
+// Shadow enabled
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
 document.body.appendChild(renderer.domElement);
 
 camera = new THREE.PerspectiveCamera(
@@ -20,25 +24,37 @@ camera = new THREE.PerspectiveCamera(
   1000
 );
 
-camera.position.set(0, 0, 5);
+camera.position.set(0, 6, 10);
+camera.lookAt(0, 0, 0);
 
 ambientLight = new THREE.AmbientLight('white');
 ambientLight.intensity = 0.1;
 scene.add(ambientLight);
 
 pointLight = new THREE.PointLight('white');
-pointLight.intensity = 10;
-pointLight.position.set(0, 3, 0);
+pointLight.intensity = 100;
+pointLight.position.set(0, 10, 0);
+pointLight.castShadow = true;
 scene.add(pointLight);
 
 
 // Mesh
+const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
+const boxMaterial = new THREE.MeshStandardMaterial({ color: 'green' });
 
-const geometry = new THREE.BoxGeometry(2, 2, 2);
-const material = new THREE.MeshStandardMaterial({ color: 'green'});
+// Ground
+const planeGeometry = new THREE.PlaneGeometry(10, 10, 10);
+const planeMaterial = new THREE.MeshStandardMaterial({ color: 'white' });
+const ground = new THREE.Mesh(planeGeometry, planeMaterial);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
 
-const cube = new THREE.Mesh(geometry, material);
+const cube = new THREE.Mesh(boxGeometry, boxMaterial);
+cube.position.set(0, 2, 0);
+cube.castShadow = true;
 scene.add(cube);
+
 
 function animate() {
   requestAnimationFrame(animate);
