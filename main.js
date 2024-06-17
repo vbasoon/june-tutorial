@@ -1,8 +1,9 @@
 import './style.css'
-import * as THREE from 'three'
+import * as THREE from 'three';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 // Main Variable
-let scene, camera, renderer;
+let scene, camera, renderer, controls;
 
 // Light Variables
 let pointLight, ambientLight
@@ -26,6 +27,8 @@ camera = new THREE.PerspectiveCamera(
 
 camera.position.set(0, 6, 10);
 camera.lookAt(0, 0, 0);
+
+controls = new OrbitControls(camera, renderer.domElement);
 
 ambientLight = new THREE.AmbientLight('white');
 ambientLight.intensity = 0.1;
@@ -51,7 +54,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 const cube = new THREE.Mesh(boxGeometry, boxMaterial);
-cube.position.set(0, 2, 0);
+cube.position.set(0, 3, 0);
 cube.castShadow = true;
 scene.add(cube);
 
@@ -60,6 +63,8 @@ function animate() {
   requestAnimationFrame(animate);
   // cube.position.x += 0.01;
   // cube.position.y += 0.01;
+
+  controls.update();
   cube.rotation.x += 0.01;
   cube.rotation.y += 0.01;
 
