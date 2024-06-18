@@ -5,59 +5,88 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 // Main Variable
 let scene, camera, renderer, controls;
 
+// Mesh Variable
+let cube, ground
+
 // Light Variables
 let pointLight, ambientLight
 
-scene = new THREE.Scene();
+function init() {
+  scene = new THREE.Scene();
 
-renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(innerWidth, innerHeight);
-// Shadow enabled
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // Renderer
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  // Shadow enabled
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.body.appendChild(renderer.domElement);
 
-document.body.appendChild(renderer.domElement);
+  //Camera
+  camera = new THREE.PerspectiveCamera(
+    60,
+    innerWidth / innerHeight,
+    0.1,
+    1000
+  );
+  camera.position.set(0, 6, 10);
+  camera.lookAt(0, 0, 0);
 
-camera = new THREE.PerspectiveCamera(
-  60,
-  innerWidth / innerHeight,
-  0.1,
-  1000
-);
+  // Control
+  controls = new OrbitControls(camera, renderer.domElement);
 
-camera.position.set(0, 6, 10);
-camera.lookAt(0, 0, 0);
+  // Light
+  ambientLight = new THREE.AmbientLight('white');
+  ambientLight.intensity = 0.1;
+  scene.add(ambientLight);
 
-controls = new OrbitControls(camera, renderer.domElement);
-
-ambientLight = new THREE.AmbientLight('white');
-ambientLight.intensity = 0.1;
-scene.add(ambientLight);
-
-pointLight = new THREE.PointLight('white');
-pointLight.intensity = 100;
-pointLight.position.set(0, 10, 0);
-pointLight.castShadow = true;
-scene.add(pointLight);
+  pointLight = new THREE.PointLight('white');
+  pointLight.intensity = 100;
+  pointLight.position.set(0, 10, 0);
+  pointLight.castShadow = true;
+  scene.add(pointLight);
 
 
-// Mesh
-const boxGeometry = new THREE.BoxGeometry(2, 2, 2);
-const boxMaterial = new THREE.MeshStandardMaterial({ color: 'green' });
+  // Objects
+  ground = GetPlane(10, 10, '#e5e5e5');
+  ground.rotation.x = -Math.PI / 2;
+  ground.receiveShadow = true;
+  scene.add(ground);
 
-// Ground
-const planeGeometry = new THREE.PlaneGeometry(10, 10, 10);
-const planeMaterial = new THREE.MeshStandardMaterial({ color: 'white' });
-const ground = new THREE.Mesh(planeGeometry, planeMaterial);
-ground.rotation.x = -Math.PI / 2;
-ground.receiveShadow = true;
-scene.add(ground);
+  cube = GetCube(2,2,2, 'green');
+  cube.position.set(0, 3, 0);
+  cube.castShadow = true;
+  scene.add(cube);
+  
+  animate()
 
-const cube = new THREE.Mesh(boxGeometry, boxMaterial);
-cube.position.set(0, 3, 0);
-cube.castShadow = true;
-scene.add(cube);
+}
 
+
+// Function of geometries
+function GetCube(w,h,d,c) {
+  const mesh = new THREE.Mesh(
+    new THREE.BoxGeometry(w, h, d),
+    new THREE.MeshStandardMaterial({ color: c })
+  );
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+
+  return mesh;
+}
+
+function GetPlane(w,d,c) {
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(w, d),
+    new THREE.MeshStandardMaterial({ color: c })
+  );
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+
+  return mesh;
+}
+
+// Animate Function
 
 function animate() {
   requestAnimationFrame(animate);
@@ -71,4 +100,4 @@ function animate() {
   renderer.render(scene, camera);  
 }
 
-animate();
+init();
