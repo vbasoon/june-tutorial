@@ -47,6 +47,11 @@ function init() {
 
   // Control
   controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 2, 0);
+  controls.dampingFactor = 0.5;
+  controls.enableDamping = true;
+  // controls.autoRotate = true;
+  // controls.autoRotateSpeed = 1;
 
   // Light
   ambientLight = new THREE.AmbientLight('white');
