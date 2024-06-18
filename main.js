@@ -32,6 +32,19 @@ function init() {
   camera.position.set(0, 6, 10);
   camera.lookAt(0, 0, 0);
 
+  // Skybox
+  const skybox = new THREE.CubeTextureLoader();
+  scene.background = skybox.load([
+    './assets/textures/1/blizzard_ft.jpg',
+    './assets/textures/1/blizzard_bk.jpg',
+    './assets/textures/1/blizzard_up.jpg',
+    './assets/textures/1/blizzard_dn.jpg',
+    './assets/textures/1/blizzard_rt.jpg',
+    './assets/textures/1/blizzard_lf.jpg',
+  ]);
+
+  
+
   // Control
   controls = new OrbitControls(camera, renderer.domElement);
 
