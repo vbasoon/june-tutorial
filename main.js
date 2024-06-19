@@ -60,7 +60,8 @@ function init() {
 
   // Control
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(4.5, 0, 4.5);
+  controls.target.set(3.5, 0, 3.5);
+  controls.maxPolarAngle = Math.PI / 2.5;
   controls.enableDamping = true;
   controls.zoomSpeed = 5;
   controls.maxDistance = 50;
